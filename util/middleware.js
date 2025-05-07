@@ -1,34 +1,57 @@
+const jwt = require('jsonwebtoken')
+const { SECRET } = require('./config')
 const logger = require('./logger')
+const { User } = require('../models')
 
-const requestLogger = (request, response, next) => {
-  logger.info('Method:', request.method)
-  logger.info('Path:  ', request.path)
-  logger.info('Body:  ', request.body)
+
+const tokenExtractor = (req, res, next) => {
+  const authorization = req.get('authorization')
+  if (authorization && authorization.startsWith('Bearer '))
+    req.token = authorization.replace('Bearer ', '')
+
+  next()
+}
+
+const userExtractor = async (req, res, next) => {
+  const decodedToken = jwt.verify( req.token, process.env.SECRET)
+
+  req.user = await User.findByPk(decodedToken.id)
+
+  next()
+}
+
+
+const requestLogger = (req, res, next) => {
+  logger.info('Method:', req.method)
+  logger.info('Path:  ', req.path)
+  logger.info('Body:  ', req.body)
   logger.info('---')
   next()
 }
 
-const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: 'unknown endpoint' })
+const unknownEndpoint = (req, res) => {
+  res.status(404).send({ error: 'unknown endpoint' })
 }
 
-const errorHandler = (error, request, response, next) => {
+const errorHandler = (error, req, res, next) => {
   logger.error(error.message)
 
   if (error.name === 'SequelizeValidationError') {
-    return response.status(400).json({ error: error.errors.map(e => e.message) })
+    return res.status(400).json({ error: error.errors.map(e => e.message) })
   } else if (error.name === 'SequelizeUniqueConstraintError') {
-    return response.status(400).json({ error: 'Unique constraint failed' })
+    return res.status(400).json({ error: 'Unique constraint failed' })
   } else if (error.name === 'SequelizeDatabaseError') {
-    return response.status(400).json({ error: error.message })
+    return res.status(400).json({ error: error.message })
   }
 
-  return response.status(500).json({ error: 'internal server error' })
+  return res.status(500).json({ error: 'internal server error' })
 }
 
 module.exports = {
   requestLogger,
   unknownEndpoint,
-  errorHandler
+  errorHandler,
+  tokenExtractor,
+  userExtractor 
 }
 

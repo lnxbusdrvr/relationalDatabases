@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize')
 
 module.exports = {
-  up: async ({ context: queryInterface }) => {
+  up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('blogs', {
       id: {
         type: DataTypes.INTEGER,
@@ -22,6 +22,14 @@ module.exports = {
       likes: {
         type: DataTypes.INTEGER,
         defaultValue: 0
+      },
+      year: {
+        type: DataTypes.INTEGER,
+      },
+      user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: { model: 'users', key: 'id' }
       },
       created_at: {
         type: DataTypes.DATE
@@ -56,13 +64,8 @@ module.exports = {
         type: DataTypes.DATE
       }
     })
-    await queryInterface.addColumn('blogs', 'user_id', {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: { model: 'users', key: 'id' },
-    })
   },
-  down: async ({ context: queryInterface }) => {
+  down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('blogs')
     await queryInterface.dropTable('users')
   },

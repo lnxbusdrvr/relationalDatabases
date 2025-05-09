@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const { Op } = require('sequelize')
 const { Blog } = require('../models')
-const { sequelize } = require('../util/db')
+const { sequelize } = require('../utils/db')
 
 
 router.get('/', async (req, res) => {

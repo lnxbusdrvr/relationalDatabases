@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const { Op } = require('sequelize')
 const { Blog, User } = require('../models')
-const { tokenExtractor, userExtractor } = require('../util/middleware')
+const { tokenExtractor, userExtractor } = require('../utils/middleware')
 
 const blogFinder = async (req, res, next) => {
   req.blog = await Blog.findByPk(req.params.id,{

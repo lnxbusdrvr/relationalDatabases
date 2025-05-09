@@ -1,10 +1,10 @@
 const express = require('express')
 const app = express()
-const middleware = require('./util/middleware')
-const logger = require('./util/logger')
+const middleware = require('./utils/middleware')
+const logger = require('./utils/logger')
 
-const { PORT } = require('./util/config')
-const { connectToDatabase } = require('./util/db')
+const { PORT } = require('./utils/config')
+const { connectToDatabase } = require('./utils/db')
 
 const blogsRouter = require('./controllers/blogs')
 const usersRouter = require('./controllers/users')

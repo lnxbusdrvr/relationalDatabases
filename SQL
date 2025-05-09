@@ -1,0 +1,29 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+INSERT INTO users (username, name, password_hash, created_at, updated_at)
+VALUES
+  ('mluukkai@iki.fi', 'Matti Luukkainen', crypt('salainen', gen_salt('bf')), NOW(), NOW());
+INSERT INTO users (username, name, password_hash, created_at, updated_at)
+VALUES
+  ('anna@virtanen.fi', 'Anna Virtanen', crypt('salainen', gen_salt('bf')), NOW(), NOW());
+INSERT INTO users (username, name, password_hash, created_at, updated_at)
+VALUES
+  ('janne@korhonen.fi', 'Janne Korhonen', crypt('salainen', gen_salt('bf')), NOW(), NOW());
+INSERT INTO users (username, name, password_hash, created_at, updated_at)
+VALUES
+  ('kati@nieminen.fi', 'Kati Nieminen', crypt('salainen', gen_salt('bf')), NOW(), NOW());
+INSERT INTO blogs (author, url, title, likes, year, user_id, created_at, updated_at)
+VALUES
+  ('Dan Abramov', 'https://reactjs.org', 'Clean React', 34, NULL, 1, NOW(), NOW()),
+  ('Bob Martin', 'https://clean.code', 'Clean Code', 5, NULL, 1, NOW(), NOW());
+INSERT INTO reading_lists (user_id, blog_id, created_at, updated_at)
+VALUES
+  (1, 1, NOW(), NOW()),
+  (1, 2, NOW(), NOW());
+INSERT INTO reading_lists (user_id, blog_id) 
+VALUES (3, 10);
+INSERT INTO reading_lists (user_id, blog_id)
+VALUES (3, 4);
+INSERT INTO reading_lists (user_id, blog_id)
+VALUES (1, 2);
+
+
